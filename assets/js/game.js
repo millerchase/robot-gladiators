@@ -39,7 +39,7 @@ const fight = (enemyName) => {
 
         intro(enemyName);
 
-            
+        while(playerHealth > 0 && enemyHealth > 0){
             //Log a resulting message to the console so we know that it worked
             if (enemyHealth > 0 && playerHealth > 0) {
                 //Subtract the value of `playerAttack` from the value of `enemyHealth` and use that result to update the value in the `enemyHealth` variable
@@ -62,26 +62,25 @@ const fight = (enemyName) => {
                     console.log(`${playerName} has died!`);
                 }
             }
-            
-
-
-     // if player chooses to skip
+        }    
+        
+        // if player chooses to skip
     } else if (promptFight === 'skip') {
         // confirm player wants to skip
-        let confirmSkip = window.confirm("Are you sure you'd like to quite?");
-
+        let confirmSkip = window.confirm("Are you sure you want to skip?");
+        
         // if yes (true), leave fight
         if (confirmSkip) {
             window.alert(`${playerName} has chosen to skip the fight. Goodbye!`);
             playerMoney = playerMoney -2;
-         // if no (false, ask question again by running fight() again)
+            // if no (false, ask question again by running fight() again)
         } else {
-            fight()
+            fight(enemyName)
         }
-     // invalid response
+        // invalid response
     } else {
         window.alert(`You need to choose a valid option. Try again!`);
-        fight();
+        fight(enemyName);
     }
 }
 
@@ -89,8 +88,10 @@ const fight = (enemyName) => {
 //INSTANCES
 // let enemyName = enemyNames[Math.floor(Math.random() * 3)];
 
-for (var i = 0; i < enemyNames.length; i++) {
-    fight(enemyNames[i]);
+for (let i = 0; i < enemyNames.length; i++) {
+    let pickedEnemyName = enemyNames[i];
+    enemyHealth = 50;
+    fight(pickedEnemyName);
 }
 
 
