@@ -40,7 +40,7 @@ const fight = (enemyName) => {;
     
     while(playerHealth > 0 && enemyHealth > 0) {
         // ask player if they'd like to fight or run
-        let promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.").toLowerCase() || 'fight';
+        let promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.", 'FIGHT').toLowerCase() || 'fight';
         if (promptFight === 'fight') {
             console.log(`Round: ${round}`);
             //Subtract the value of `playerAttack` from the value of `enemyHealth` and use that result to update the value in the `enemyHealth` variable
@@ -91,7 +91,7 @@ const fight = (enemyName) => {;
     }
 };
 
-// game setup logic
+// logic for starting game
 const startGame = () => {
 
     playerHealth = 100;
@@ -105,6 +105,15 @@ const startGame = () => {
             let pickedEnemyName = enemyNames[i];
             enemyHealth = 50;
             fight(pickedEnemyName);
+
+            if (playerHealth > 0 && i < enemyNames.length - 1) {
+                // ask if player wants to use the store before next round
+                var storeConfirm = window.confirm("The fight is over, visit the store before the next round?");
+
+                if (storeConfirm) {
+                    shop();
+                }
+            }
         } else {
             window.alert("You have lost your robot in battle! Game Over!");
             break;
@@ -115,7 +124,7 @@ const startGame = () => {
     endGame();
 };
 
-// end of game logic
+// logic for end of game
 const endGame = () => {
     // if player is still alive, player wins!
     if (playerHealth > 0) {
@@ -132,6 +141,59 @@ const endGame = () => {
         startGame();
     } else {
         window.alert("Thank you for playing Robot Gladiators! Come back soon!");
+    }
+};
+
+// logic for the shop
+const shop = () => {
+    // ask player what they'd like to do
+    let shopOptionPrompt = window.prompt(
+        "Would you like to REFILL your health, UPGRADE your attack, or LEAVE the shop? Please enter one: 'REFILL', 'UPGRADE', or 'LEAVE' to make a choice."
+    ).toLowerCase();
+
+    switch(shopOptionPrompt) {
+        case 'refill':
+            // make sure player has enough money
+            if (playerMoney >= 7) {
+                window.alert('Refilling player\'s health by 20 for 7 dollars.');
+
+                // increase health and decrease money
+                playerHealth += 20;
+                playerMoney -= 7;
+                break;
+
+            } else {
+                window.alert("You don't have enough money!");
+                break;
+            }
+            
+
+        case 'upgrade':
+            // make sure player has enough money
+            if (playerMoney >= 7) {
+                window.alert("Upgrading player's attack by 6 for 7 dollars.");
+
+                // increase attack decrease money
+                playerAttack += 6;
+                playerMoney -= 7;
+                break;
+
+            } else {
+                window.alert("You don't have enough money!");
+                break;
+            }
+            
+
+        case 'leave':
+            window.alert("Leaving the store.");
+            break;
+
+        default:
+            window.alert("You did not pick a valid option. Try again.");
+
+            // call shop() again to force player to pick a valid option
+            shop();
+            break;
     }
 };
 
