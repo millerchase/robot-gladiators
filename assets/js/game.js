@@ -2,17 +2,23 @@
 
 // players name and setup; created default name 'The Stranger' if no name was entered
 let playerName = window.prompt("What is your robot's name") || 'The Stranger';
-let playerHealth = 100;
-let playerAttack = 10;
-let playerMoney = 10;
+let playerHealth;
+let playerAttack;
+let playerMoney;
 
 // enemies setup
 let enemyNames = ["Roborto", "Amy Android", "Robo Trumble"];
-let enemyHealth = 50;
+let enemyHealth;
 let enemyAttack = 12;
 
 
 //FUNCTIONS
+
+const randomNumber = (min, max)=> {
+    let value = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    return value;
+};
 
 // fighter introduction
 const intro = (enemyName) => {
@@ -32,7 +38,7 @@ const fightUpdate = (attacker, enemyName) => {
 };
 
 // create a function named "fight"
-const fight = (enemyName) => {;
+const fight = (enemyName) => {
     // create round counter
     let round = 1;
     
@@ -43,8 +49,13 @@ const fight = (enemyName) => {;
         let promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.", 'FIGHT').toLowerCase() || 'fight';
         if (promptFight === 'fight') {
             console.log(`Round: ${round}`);
-            //Subtract the value of `playerAttack` from the value of `enemyHealth` and use that result to update the value in the `enemyHealth` variable
-            enemyHealth -= playerAttack;
+
+            // generate random damage value based on player's attack power
+            let damage = randomNumber(playerAttack - 3, playerAttack);
+
+            //Subtract the value of `playerAttack` damage from the value of `enemyHealth` and use that result to update the value in the `enemyHealth` variable
+            enemyHealth = Math.max(0, enemyHealth - damage);
+
             //Log a resulting message to the console so we know that it worked
             if (enemyHealth > 0) {
                 fightUpdate(playerName, enemyName);
@@ -55,16 +66,25 @@ const fight = (enemyName) => {;
                 playerMoney += 20;
                 break;    
             }
+
+            // check damage is working properly
+            console.log(`${playerName} has done: ${damage} points of damage`);
+
+            // generate random dame value based on enemy's attack power
+            damage = randomNumber(enemyAttack - 3, enemyAttack);
             
             // Subtract the value of `enemyAttack` from the value of `playerHealth` and use that result to update the value in the `playerHealth` variable.
-            playerHealth -= enemyAttack;
+            playerHealth = Math.max(0, playerHealth - damage);
             //Log a resulting message to the console so we know that it worked
             if (playerHealth > 0) {
                 fightUpdate(enemyName, enemyName);
             } else {
                 console.log(`${playerName} has died!`);
                 break;
-            }    
+            }
+
+            // check damage is working properly
+            console.log(`${enemyName} has done: ${damage} points of damage`);
             
             // count for end of round
             round += 1;
@@ -76,7 +96,7 @@ const fight = (enemyName) => {;
             // if yes (true), leave fight
             if (confirmSkip) {
                 window.alert(`${playerName} has decided to skip this fight. Goodbye!`);
-                playerMoney -= 10;
+                playerMoney = Math.max(0, playerMoney - 10);
                 console.log("playerMoney", playerMoney);
                 break;
                 // if no (false, ask question again by running fight() again)
@@ -103,7 +123,7 @@ const startGame = () => {
             // Alert players that they are starting the battle
             window.alert(`Welcome to Robot Gladiators! Battle: ${i + 1}`);
             let pickedEnemyName = enemyNames[i];
-            enemyHealth = 50;
+            enemyHealth = randomNumber(40, 60);
             fight(pickedEnemyName);
 
             if (playerHealth > 0 && i < enemyNames.length - 1) {
