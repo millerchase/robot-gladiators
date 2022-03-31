@@ -88,9 +88,6 @@ const fight = (enemy) => {
             //Subtract the value of `playerInfo.attack` damage from the value of `enemy Health` and use that result to update the value in the `enemy Health` variable
             enemy.health = Math.max(0, enemy.health - damage);
 
-            // check damage is working properly
-            console.log(`${playerInfo.name} has done: ${damage} points of damage`);
-
             //Log a resulting message to the console so we know that it worked
             if (enemy.health > 0) {
                 fightUpdate(playerInfo, enemy);
@@ -109,9 +106,6 @@ const fight = (enemy) => {
             // Subtract the value of `enemy.attack` from the value of `playerInfo.health` and use that result to update the value in the `playerInfo.health` variable.
             playerInfo.health = Math.max(0, playerInfo.health - damage);
 
-            // check damage is working properly
-            console.log(`${enemy.name} has done: ${damage} points of damage`);
-            
             //Log a resulting message to the console so we know that it worked
             if (playerInfo.health > 0) {
                 fightUpdate(enemy, enemy);
