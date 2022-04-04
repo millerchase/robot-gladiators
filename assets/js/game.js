@@ -57,6 +57,7 @@ function randomNumber(min, max) {
     return value;
 };
 
+// function for getting player's robot name
 function getPlayerName() {
     let name = "";
 
@@ -84,67 +85,85 @@ const fightUpdate = (attacker, enemy) => {
     }
 };
 
+// function for fight or skip prompt
+const fightOrSkip = function() {
+    // ask player if they'd like to fight or skip using fightOrSkip function
+    let promptFight = window.prompt('Would you like to FIGHT or SKIP this battle?');
+    
+    if (!promptFight) {
+        window.alert("You need to provide a valid answer! Please try again.")
+        return fightOrSkip();
+    }
+
+    if (promptFight === 'fight') {
+        console.log("You chose fight");
+        return false;
+    } else if (promptFight.toLowerCase() === 'skip') {
+        
+        // confirm player wants to skip
+        let confirmSkip = window.confirm("Are you sure you want to skip?"); 
+        // if yes (true), leave fight
+        if (confirmSkip) {
+            window.alert(`${playerInfo.name} has decided to skip this fight. Goodbye!`);
+            // subtract money for skipping
+            playerInfo.money = Math.max(0, playerInfo.money - 10);
+            console.log("playerInfo.money", playerInfo.money);
+            
+            // retur true if player wants to leave
+            return true;
+
+        } else {
+
+            return false;
+        }
+    } else {
+        window.alert("You need to provide a valid answer! Please try again.")
+        fightOrSkip();
+    }
+}
 // create a function named "fight"
 const fight = (enemy) => {
     // create round counter
     
     while(playerInfo.health > 0 && enemy.health > 0) {
-        // ask player if they'd like to fight or run
-        let promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose."); //, 'FIGHT') || 'fight';
-        if (promptFight.toLowerCase() === 'fight') {
 
-            // generate random damage value based on player's attack power
-            let damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
-
-            //Subtract the value of `playerInfo.attack` damage from the value of `enemy Health` and use that result to update the value in the `enemy Health` variable
-            enemy.health = Math.max(0, enemy.health - damage);
-
-            //Log a resulting message to the console so we know that it worked
-            if (enemy.health > 0) {
-                fightUpdate(playerInfo, enemy);
-            } else {
-                console.log(`${enemy.name} has died!`); 
-                
-                // award player money for winning
-                playerInfo.addMoney();
-                break;    
-            }
-
-
-            // generate random dame value based on enemy's attack power
-            damage = randomNumber(enemy.attack - 3, enemy.attack);
-            
-            // Subtract the value of `enemy.attack` from the value of `playerInfo.health` and use that result to update the value in the `playerInfo.health` variable.
-            playerInfo.health = Math.max(0, playerInfo.health - damage);
-
-            //Log a resulting message to the console so we know that it worked
-            if (playerInfo.health > 0) {
-                fightUpdate(enemy, enemy);
-            } else {
-                console.log(`${playerInfo.name} has died!`);
-                break;
-            }
-
-            
-            // if player chooses to skip
-        } else if (promptFight.toLowerCase() === 'skip') {
-            // confirm player wants to skip
-            let confirmSkip = window.confirm("Are you sure you want to skip?"); 
-            // if yes (true), leave fight
-            if (confirmSkip) {
-                window.alert(`${playerInfo.name} has decided to skip this fight. Goodbye!`);
-                playerInfo.money = Math.max(0, playerInfo.money - 10);
-                console.log("playerInfo.money", playerInfo.money);
-                break;
-                // if no (false, ask question again by running fight() again)
-            } else {
-                fight(enemy);
-            }
-            // invalid response
-        } else {
-            window.alert(`You need to choose a valid option. Try again!`);
-            fight(enemy);
+        if(fightOrSkip()){
+            break;
         }
+       
+
+        // generate random damage value based on player's attack power
+        let damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+
+        //Subtract the value of `playerInfo.attack` damage from the value of `enemy Health` and use that result to update the value in the `enemy Health` variable
+        enemy.health = Math.max(0, enemy.health - damage);
+
+        //Log a resulting message to the console so we know that it worked
+        if (enemy.health > 0) {
+            fightUpdate(playerInfo, enemy);
+        } else {
+            console.log(`${enemy.name} has died!`); 
+            
+            // award player money for winning
+            playerInfo.addMoney();
+            break;    
+        }
+
+
+        // generate random dame value based on enemy's attack power
+        damage = randomNumber(enemy.attack - 3, enemy.attack);
+        
+        // Subtract the value of `enemy.attack` from the value of `playerInfo.health` and use that result to update the value in the `playerInfo.health` variable.
+        playerInfo.health = Math.max(0, playerInfo.health - damage);
+
+        //Log a resulting message to the console so we know that it worked
+        if (playerInfo.health > 0) {
+            fightUpdate(enemy, enemy);
+        } else {
+            console.log(`${playerInfo.name} has died!`);
+            break;
+        }
+
     }
 };
 
