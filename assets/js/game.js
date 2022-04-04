@@ -2,7 +2,7 @@
 
 // players name and setup; created default name 'The Stranger' if no name was entered
 const playerInfo = {
-    name: window.prompt("What is your robot's name") || 'The Stranger',
+    name: getPlayerName(),
     health: 100,
     attack: 10,
     money: 10,
@@ -57,6 +57,17 @@ function randomNumber(min, max) {
     return value;
 };
 
+function getPlayerName() {
+    let name = "";
+
+    while (name === "" || name === null) {
+        name = window.prompt("What is your robot's name?");
+    }
+    
+    console.log(`Your robot's name is ${name}`);
+    return name;
+}
+
 // fighter introduction (used for testing not in use)
 const intro = (enemyName) => {
     console.log(`NEXT BATTLE ON ROBOT GLADIATORS!!! \n ${playerInfo.name} VS. ${enemyName}!`);
@@ -79,7 +90,7 @@ const fight = (enemy) => {
     
     while(playerInfo.health > 0 && enemy.health > 0) {
         // ask player if they'd like to fight or run
-        let promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.", 'FIGHT') || 'fight';
+        let promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose."); //, 'FIGHT') || 'fight';
         if (promptFight.toLowerCase() === 'fight') {
 
             // generate random damage value based on player's attack power
