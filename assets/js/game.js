@@ -96,8 +96,8 @@ const fightOrSkip = function() {
     }
 
     if (promptFight === 'fight') {
-        console.log("You chose fight");
         return false;
+
     } else if (promptFight.toLowerCase() === 'skip') {
         
         // confirm player wants to skip
@@ -124,45 +124,92 @@ const fightOrSkip = function() {
 // create a function named "fight"
 const fight = (enemy) => {
     // create round counter
+    let isPlayerTurn = true;
+
+    // pick random first turn
+    if (Math.random() > 0.5) {
+        isPlayerTurn = false;
+    }
     
     while(playerInfo.health > 0 && enemy.health > 0) {
-
+        // ask to player to fight or skip
         if(fightOrSkip()){
             break;
         }
        
-
-        // generate random damage value based on player's attack power
-        let damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
-
-        //Subtract the value of `playerInfo.attack` damage from the value of `enemy Health` and use that result to update the value in the `enemy Health` variable
-        enemy.health = Math.max(0, enemy.health - damage);
-
-        //Log a resulting message to the console so we know that it worked
-        if (enemy.health > 0) {
-            fightUpdate(playerInfo, enemy);
-        } else {
-            console.log(`${enemy.name} has died!`); 
+        if (isPlayerTurn) {
             
-            // award player money for winning
-            playerInfo.addMoney();
-            break;    
-        }
+            // PLAYER TURN
+            // generate random damage value based on player's attack power
+            let damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+    
+            //Subtract the value of `playerInfo.attack` damage from the value of `enemy Health` and use that result to update the value in the `enemy Health` variable
+            enemy.health = Math.max(0, enemy.health - damage);
+    
+            //Log a resulting message to the console so we know that it worked
+            if (enemy.health > 0) {
+                fightUpdate(playerInfo, enemy);
+            } else {
+                console.log(`${enemy.name} has died!`); 
+                
+                // award player money for winning
+                playerInfo.addMoney();
+                break;    
+            }
+    
+            // ENEMY TURN
+            // generate random dame value based on enemy's attack power
+            damage = randomNumber(enemy.attack - 3, enemy.attack);
+            
+            // Subtract the value of `enemy.attack` from the value of `playerInfo.health` and use that result to update the value in the `playerInfo.health` variable.
+            playerInfo.health = Math.max(0, playerInfo.health - damage);
+    
+            //Log a resulting message to the console so we know that it worked
+            if (playerInfo.health > 0) {
+                fightUpdate(enemy, enemy);
+            } else {
+                console.log(`${playerInfo.name} has died!`);
+                break;
+            }
 
-
-        // generate random dame value based on enemy's attack power
-        damage = randomNumber(enemy.attack - 3, enemy.attack);
-        
-        // Subtract the value of `enemy.attack` from the value of `playerInfo.health` and use that result to update the value in the `playerInfo.health` variable.
-        playerInfo.health = Math.max(0, playerInfo.health - damage);
-
-        //Log a resulting message to the console so we know that it worked
-        if (playerInfo.health > 0) {
-            fightUpdate(enemy, enemy);
+         // reverse order
         } else {
-            console.log(`${playerInfo.name} has died!`);
-            break;
+
+            // ENEMY TURN
+            // generate random dame value based on enemy's attack power
+            damage = randomNumber(enemy.attack - 3, enemy.attack);
+            
+            // Subtract the value of `enemy.attack` from the value of `playerInfo.health` and use that result to update the value in the `playerInfo.health` variable.
+            playerInfo.health = Math.max(0, playerInfo.health - damage);
+    
+            //Log a resulting message to the console so we know that it worked
+            if (playerInfo.health > 0) {
+                fightUpdate(enemy, enemy);
+            } else {
+                console.log(`${playerInfo.name} has died!`);
+                break;
+            }
+
+            // PLAYER TURN
+            // generate random damage value based on player's attack power
+            damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+    
+            //Subtract the value of `playerInfo.attack` damage from the value of `enemy Health` and use that result to update the value in the `enemy Health` variable
+            enemy.health = Math.max(0, enemy.health - damage);
+    
+            //Log a resulting message to the console so we know that it worked
+            if (enemy.health > 0) {
+                fightUpdate(playerInfo, enemy);
+            } else {
+                console.log(`${enemy.name} has died!`); 
+                
+                // award player money for winning
+                playerInfo.addMoney();
+                break;    
+            }
         }
+        // switch turn order for next round
+        isPlayerTurn = !isPlayerTurn;
 
     }
 };
