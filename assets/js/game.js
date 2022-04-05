@@ -74,6 +74,23 @@ const intro = (enemyName) => {
     console.log(`NEXT BATTLE ON ROBOT GLADIATORS!!! \n ${playerInfo.name} VS. ${enemyName}!`);
 };
 
+// function for receiving and setting high score
+const getHighscore = () => {
+    // grab current highscore from local storage and convert to integer
+    let highscore = parseInt(localStorage.getItem("highscore")) || 0;
+
+    // if score is higher then highscore or highscore doesnt exist then reasign highscore
+    if (playerInfo.money > highscore) {
+        // save current player name and new highscore
+        localStorage.setItem("highscore", playerInfo.money);
+        localStorage.setItem("name", playerInfo.name);
+        
+        alert(`${playerInfo.name} now has the high score of ${playerInfo.money}!`);
+    } else {   
+        alert(`${playerInfo.name} did not beat the high score of ${highscore}`);
+    }
+}
+
 // update for fight progress
 const fightUpdate = (attacker, enemy) => {
     if (attacker.name === playerInfo.name) {
@@ -251,6 +268,7 @@ const endGame = () => {
     // if player is still alive, player wins!
     if (playerInfo.health > 0) {
         window.alert(`Great job, you've survived the Game! You now have a score of ${playerInfo.money}.`);
+        getHighscore(playerInfo.money);
     } else {
         window.alert("You've lost your robot in battle.");
     }
